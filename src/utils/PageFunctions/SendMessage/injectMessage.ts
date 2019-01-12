@@ -5,12 +5,12 @@ import { Selectors } from '../_constans'
  * Whatsapp is very clever, but I don't stand behind.
  * Setting innertext by it-self does not trigger the page framework to see that
  * there is content to be sent. So... we need to trigger a change to the element
- * that is behaving like the input zone.
- * 1 - Set the innertext with the message plus a letter
+ * that is behaving like the input element.
+ * 1 - Set the innerText with the message plus a letter
  * 2 - Click on the element
  * 3 - Trigger backspace into it
  * After 3, the framework responds on the keypress and updates the value to be sent
- * according to the div innerHTML. Done.
+ * according to the div innerText. Done.
  * @param page 
  * @param message 
  */
@@ -31,7 +31,7 @@ export default async function injectMessage (page: Page, message: string): Promi
         }
         let textareaElement = document.querySelector(textareaSelector)
         if (textareaElement === null) return Promise.resolve(false)
-        textareaElement.innerText = message + 'a'
+        textareaElement.innerText = message + '_'
         return Promise.resolve(getXPathForElement(textareaElement))
     }, textareaSelector, message)
 
