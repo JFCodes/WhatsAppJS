@@ -11,20 +11,19 @@ const WAJS = new WhatsAppJs({
 })
 
 // Containning the code on a function so you can use async/await
-
 const run = async () => {
     
     // The onLogin setter is the most important because it defines what to do
     // after a valid login since we have to wait for the user to read the QRCode.
     WAJS.onLogin(async () => {
         // Here, we are now login and able to send messages
-
-        // And send our messages!!!
         await WAJS.sendMessage({ target: 'Bernardo', message: 'Hey, this was a bot!!!' })
         await WAJS.sendMessage({ target: 'Bernardo', message: 'E esta tambem' })
         await WAJS.sendMessage({ target: 'Bernardo', message: 'Isto e brutal!!! lol' })
         await WAJS.sendMessage({ target: 'Bernardo', message: 'Estou a mandar mensagens por codigo automatico hehe' })
 
+        // You need to stop the class to kill puppeeter and end the process.
+        // Otherwise, Node keeps running. Place it accordingly in your code.
         WAJS.stop()
     })
 

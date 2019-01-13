@@ -1,5 +1,12 @@
+/**
+ * Simple utility class to read/write and other ops for fileSystem while making them promised based.
+ */
 import * as fs from 'fs'
 
+/**
+ * Function to promised base write a file to disk
+ * @param param0 
+ */
 export const WriteToFile = ({ fileName, content, enconding }: { fileName: string, content: string, enconding: string }): Promise<boolean> => {
     return new Promise((resolve, reject) => {
         fs.writeFile(fileName, content, enconding, (error) => {
@@ -7,7 +14,10 @@ export const WriteToFile = ({ fileName, content, enconding }: { fileName: string
         })
     })
 }
-
+/**
+ * Function to promised base read a file from disk
+ * @param param0 
+ */
 export const ReadFromFile = ({ fileName }: { fileName: string }): Promise<string> => {
     return new Promise( (resolve, reject) => {
         fs.readFile(fileName, 'utf8', (error, contents) => {
@@ -15,7 +25,10 @@ export const ReadFromFile = ({ fileName }: { fileName: string }): Promise<string
         })
     })
 }
-
+/**
+ * Function read a file from disk, just to avoid importing 'fs' and just reuse this module
+ * @param param0 
+ */
 export const ReadFromFileAsync = ({fileName}) => {
     return fs.readFileSync(fileName, 'utf8');
 }

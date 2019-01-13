@@ -4,11 +4,13 @@ import clickConversarion from '../utils/PageFunctions/SendMessage/clickConversar
 import injectMessage from '../utils/PageFunctions/SendMessage/injectMessage'
 import pressSend from '../utils/PageFunctions/SendMessage/pressSend'
 
+// A message must have a target and a message strings
 export interface MessageToSend {
     target: string,
     message: string
 }
 
+// Defaults and a delay promise to hold execution
 const PACE_TIMING: number = 1000
 const delay = (time) => { return new Promise(resolve => setTimeout(resolve, time))}
 
@@ -18,10 +20,15 @@ interface ConstructorOptions {
     target: string
 }
 
+/**
+ * Class to send a new message.
+ * Receives .page from WhatsApp class which is a direct pointer to puppeeter.browser.page instance.
+ * Coordinates the operations to send a message using pageFunctions
+ */
 class SendMessage {
-    private page: puppeteer.Page 
-    private message: string
-    private target: string
+    private page: puppeteer.Page    // Pointer to puppeeter.browser.page instance
+    private message: string         // The message to send
+    private target: string          // The target to send the message to.
 
     constructor({ page, message, target }: ConstructorOptions) {
         this.page = page
@@ -29,17 +36,20 @@ class SendMessage {
         this.target = target
     }
 
+    /**
+     * Send a message.
+     * 1. Find and click the target converstion. Error if not found.
+     * 2. Inject the message into the text field. Error if text field not found.
+     * 3. Press button to send message.
+     * 4. TODO: confirm message was sent (appears on screen and has 1 or 2 check marks)
+     */
     public async send (): Promise<void> {
-        // Click the target to trigger its chat
-        // Inject the content on the message textarea
-        // Click the send button
         await clickConversarion(this.page, this.target).catch((error) => { throw error })
         await delay(PACE_TIMING)
         await injectMessage(this.page, this.message).catch((error) => { throw error })
         await delay(PACE_TIMING)
         await pressSend(this.page).catch((error) => { throw error })
         await delay(PACE_TIMING)
-        console.log(`Your message to ${this.target} was sent.`)
     }
 }
 

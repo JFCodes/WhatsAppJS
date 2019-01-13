@@ -1,3 +1,6 @@
+/**
+ * Selectors enum to quickly change selector strings in cases WhatsApp FE changes structure/classes
+ */
 export enum Selectors {
     'QRCODE_IMG_PARENT_CLASS' = '._2EZ_m',
     'CONVERSATIONS_PARENT_CLASS' = '.RLfQR',
