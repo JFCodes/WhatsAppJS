@@ -1,5 +1,6 @@
 import { Page } from "puppeteer";
 import { Selectors } from '../_constans'
+import _getXPath from '../_getXPath'
 
 /**
  * Finding and clicking the converstation div from the left side converstaion listing.
@@ -18,22 +19,13 @@ export default async function clickConversarion (page: Page, targetString: strin
     const titleSelector = Selectors.CONVERSATION_TARGET_ELEMENT
 
     const targetXPath = await page.evaluate((containerSelector, titleSelector, targetString) => {
-        let xPath = ''
-        const  container = document.querySelector(containerSelector)
-        // TODO: remove this from evaluation script and simply inject it.
-        // This is being used in several pageFunctions modules...
-        // Thanks to https://stackoverflow.com/questions/2661818/javascript-get-xpath-of-a-node
-        const getXPathForElement = (element) => {
-            const idx = (sib, name) => sib 
-                ? idx(sib.previousElementSibling, name || sib.localName) + (sib.localName == name)
-                : 1;
-            const segs = elm => !elm || elm.nodeType !== 1 
-                ? ['']
-                : elm.id && document.querySelector(`#${elm.id}`) === elm
-                    ? [`id("${elm.id}")`]
-                    : [...segs(elm.parentNode), `${elm.localName.toLowerCase()}[${idx(elm, undefined)}]`];
+        const _getXPath = (element) => { 
+            const idx = (sib, name) => sib ? idx(sib.previousElementSibling, name || sib.localName) + (sib.localName == name) : 1;
+            const segs = elm => !elm || elm.nodeType !== 1 ? [''] : elm.id && document.querySelector(`#${elm.id}`) === elm ? [`id("${elm.id}")`] : [...segs(elm.parentNode), `${elm.localName.toLowerCase()}[${idx(elm, undefined)}]`];
             return segs(element).join('/');
         }
+        let xPath = ''
+        const  container = document.querySelector(containerSelector)
         for(let element of container.children) {
             const titleSpanElement = element.querySelector(titleSelector)
             if (!titleSpanElement) continue
@@ -41,7 +33,7 @@ export default async function clickConversarion (page: Page, targetString: strin
             if (spanElement.innerText === targetString) {
                 // Remember our target element is the child of the conversarion container
                 // not the span element with the conversation target
-                xPath = getXPathForElement(element)
+                xPath = _getXPath(element)
                 return Promise.resolve(xPath)
             }
         }

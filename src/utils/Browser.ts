@@ -27,8 +27,8 @@ class Browser {
         this.initiated = false
         this.headless = options.headless
         this.devTools = options.devTools
-        this.width = 1800
-        this.height = 800
+        this.width = 1000
+        this.height = 1000
         this.browser = null
         this.page = null
     }

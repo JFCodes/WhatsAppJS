@@ -1,6 +1,6 @@
 import { Page } from "puppeteer";
 import { Selectors } from '../_constans'
-
+import _getXPath from '../_getXPath'
 /**
  * Presses the send button to send the injected message
  * @param page 
@@ -9,23 +9,14 @@ export default async function pressSend (page: Page): Promise<boolean> {
     const sendButtonSelector = Selectors.CHAT_SEND_BUTTON_SELECTOR
 
     const targetXPath = await page.evaluate((sendButtonSelector) => {
-        let xPath = ''
-        // TODO: remove this from evaluation script and simply inject it.
-        // This is being used in several pageFunctions modules...
-        const getXPathForElement = (element) => {
-            const idx = (sib, name) => sib 
-                ? idx(sib.previousElementSibling, name || sib.localName) + (sib.localName == name)
-                : 1;
-            const segs = elm => !elm || elm.nodeType !== 1 
-                ? ['']
-                : elm.id && document.querySelector(`#${elm.id}`) === elm
-                    ? [`id("${elm.id}")`]
-                    : [...segs(elm.parentNode), `${elm.localName.toLowerCase()}[${idx(elm, undefined)}]`];
+        const _getXPath = (element) => { 
+            const idx = (sib, name) => sib ? idx(sib.previousElementSibling, name || sib.localName) + (sib.localName == name) : 1;
+            const segs = elm => !elm || elm.nodeType !== 1 ? [''] : elm.id && document.querySelector(`#${elm.id}`) === elm ? [`id("${elm.id}")`] : [...segs(elm.parentNode), `${elm.localName.toLowerCase()}[${idx(elm, undefined)}]`];
             return segs(element).join('/');
         }
         // Find button and retrieve its XPath
         const button = document.querySelector(sendButtonSelector)
-        return Promise.resolve(getXPathForElement(button))
+        return Promise.resolve(_getXPath(button))
     }, sendButtonSelector)
 
     if (targetXPath === '') {

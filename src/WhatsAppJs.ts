@@ -54,6 +54,7 @@ class WhatsAppJs {
     public async initiate () {
         if (this.initiated) return
         await this.browser.initiate()
+        this.stopListeners = false
         this.initiated = true
     }
 
@@ -81,7 +82,7 @@ class WhatsAppJs {
      * The user can automatically open the image in a image program with the option openImage set to true.
      * @param options 
      */
-    public async getQrCode ({ openImage = false }: { openImage: boolean} ): Promise<string> {
+    public async getQrCode ({ openImage = false }: { openImage?: boolean} ): Promise<string> {
         const isLoggedInError = 'WhatsAppJS is already logged in. Cannot generate QRCode.'
         // Throw error if not initiated or already logged in. 
         if (!this.initiated) throw new Error('WhatsAppJS object is not initiated. Please call .initiate before getting the QRCode')
@@ -116,6 +117,7 @@ class WhatsAppJs {
         // If option openImage, use a command to launch it in the user predefined image program
         if (openImage) exec(path.resolve(__dirname, this.tempFilePath.replace('src/', '')))
         // Initiate login listener that triggers when it detects that the user scanned the qrCode
+        console.log('kick in login')
         this.loginListener()
         return qrCodeString
     }
@@ -130,7 +132,10 @@ class WhatsAppJs {
         if (!message.message) throw new Error('Undefined message to send.')
         // Create new SendMesasge object and trigger .send()
         const newMessage = new SendMessage({ page: this.browser.page, ...message })
-        await newMessage.send().catch((error) => { throw new Error('Failed to send message') })
+        await newMessage.send().catch((error) => { 
+            console.log(error)
+            throw new Error('Failed to send message')
+        })
     }
 
     /**
