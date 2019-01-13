@@ -118,6 +118,8 @@ const run = async () => {
 
         // You need to stop the class to kill puppeeter and end the process.
         // Otherwise, Node keeps running. Place it accordingly in your code.
+        // If you want to leave it running to handle onMessage events,
+        // do not use WAJS.stop().
         WAJS.stop()
     })
 
