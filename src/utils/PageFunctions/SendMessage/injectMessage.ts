@@ -3,15 +3,7 @@ import { Selectors } from '../_constans'
 import _getXPath from '../_getXPath'
 
 /**
- * Whatsapp is very clever, but I don't stand behind.
- * Setting innertext by it-self does not trigger the page JS framework to see that
- * there is content to be sent. So... we need to trigger a change to the element
- * that is behaving like the input element.
- * 1 - Set the innerText with the message plus a char
- * 2 - Click on the element
- * 3 - Trigger backspace to delete the added char
- * After 3, the framework responds on the keypress and updates the value to be sent
- * according to the div innerText. Done.
+ * Inject message into the message input element
  * @param page 
  * @param message 
  */
@@ -27,7 +19,6 @@ export default async function injectMessage (page: Page, message: string): Promi
         // Find and inject message into div behaving like the text input
         const textareaElement = document.querySelector(textareaSelector)
         if (textareaElement === null) return Promise.resolve(false)
-        textareaElement.innerText = message + '_'
         // Return the div XPath
         return Promise.resolve(_getXPath(textareaElement))
     }, textareaSelector, message)
@@ -39,8 +30,7 @@ export default async function injectMessage (page: Page, message: string): Promi
     // Find and press backspace on target element
     const targetElement: any[] = await page.$x(targetXPath)
     if (targetElement.length > 0) {
-        await targetElement[0].click()
-        await page.keyboard.press('Backspace')
+        await targetElement[0].type(message, { delay: 26 })
         return true
     } else {
         throw new Error('Found target element but xPath is invalid.')
