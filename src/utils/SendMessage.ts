@@ -40,10 +40,12 @@ class SendMessage {
 
     /**
      * Send a message.
-     * 1. Find and click the target conversation. Error if not found.
-     * 2. Inject the message into the text field. Error if text field not found.
-     * 3. Press button to send message. Error if button not found.
-     * 4. TODO: confirm message was sent (appears on screen and has 1 or 2 check marks)
+     * 1. Inject target into conversations search bar
+     * 2. Click conversation with title matching target. Ignore message results.
+     * 3. Clears conversations search bar.
+     * 4. Inject the message into the text field. Error if text field not found.
+     * 5. Press button to send message. Error if button not found.
+     * 6. TODO: confirm message was sent (appears on screen and has 1 or 2 check marks)
      */
     public async send (): Promise<void> {
         await searchTarget(this.page, this.target).catch((error) => { throw error })
