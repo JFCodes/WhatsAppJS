@@ -1,6 +1,6 @@
 # WhatsAppJS
 
-WhatsAppJS is a Javascript (Written in TypeScript) wrapper to send WhatsApp messages using code.
+WhatsAppJS is a Javascript (written in TypeScript) wrapper to send WhatsApp messages using code.
 
 # Motivation
 
@@ -15,7 +15,7 @@ Its not ready to be used has a npm dependency (yet) but you can download the cod
 ---
 # IMPORTANTE NOTICE
 ## Regarding the safety of your data
-As a responsable person you should not trust blindly anything you come accross online. This project is open source so anyone can audit its code and check there is no outside connection or data dumps being made to any untrusted server. You can and **should check the code** which is using a Puppeeter instance and that its actions are confined to the WhatsApp Web app. You can also double check by running this package over a dummy WhatsApp account and spoofing all network calls being made. **They should match all the calls WhatsApp Web App uses in their page and not one more.**
+As a responsable person you should not trust blindly anything you come accross online. This project is open source so anyone can audit its code and check that there is no outside connection or data dumps being made to any untrusted server. You can and **should check the code** which is using a Puppeeter instance which actions are confined to the WhatsApp Web app. You can also double check by running this package over a dummy WhatsApp account and spoofing all network calls being made. **They should match all the calls WhatsApp Web App uses in their page and not one more.**
 
 At no moment should you trust a project like this without auditing its code. A puppeetter instance is an actual browser with access to all the data on the WhatsApp account, the same data you would have access if you loggin right now in your local browser.
 
@@ -34,14 +34,14 @@ The first version of WhatsAppJS is capable of:
 
 ## Roadmap
 
-Working-in-process features include:
+Work-in-process features include:
 - Detect received messages, retrieving the sender and the message content to be worked upon.
-- Improve how to identify a working target.
-   - Ability to search on contacts and not only on the left side contact list.
+- Improve how to identify a valid target.
+   - Ability to search contacts and not only the left side conversation list.
    - Better algorithm to match the target string to the desire contact.
 - Prevent and/or recover from conversations poping in to the active conversation.
 - Use of whatsapp api instead of DOM manipulation.
-- ~~Make getQrCode() method also retrieve the Base64 string if the developer decides to do something else with it.~~ [Done]
+- [Done] ~~Make getQrCode() method also retrieve the Base64 string if the developer decides to do something else with it.~~
 
 ---
 ## The WhatsAppJS class
@@ -79,8 +79,7 @@ according to the sender (message.target) and the message (message.message).
 ```
 A message to be sent to a target.
 The target is the exact name (for now, see Roadmap) of the conversation 
-that apears on the left side conversations panel of the logged user
-WhatsApp account.
+that apears on the left side conversations panel of the logged user.
 For now targets are limited to the user active
 conversations and not to the users contact list.
 ```
@@ -89,6 +88,8 @@ conversations and not to the users contact list.
 Kills the WhatsApp listeners and closes the puppeeter instance.
 You need to .stop() your WhatsApp object if you want the runtime
 to end the process, otherwise the listerners might still be active.
+Do not stop the instance if you want it to be left activally listen to
+received messages.
 ```
 
 ---
@@ -137,7 +138,7 @@ const run = async () => {
     await WAJS.initiate()
     // You can fetch the image file from ./src/temp/qrcode.png after .getQrCode is resolved
     await WAJS.getQrCode({ openImage: true })
-    // getQrCode() also returns the base74 string containing the QRCode if you want to use it for something else
+    // getQrCode() also returns the base64 string containing the QRCode if you want to use it for something else
     // const QRCodeImageString = await WAJS.getQrCode()
 
     // After getting the QRCode the user must read it with their phone.
