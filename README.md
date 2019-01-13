@@ -40,6 +40,7 @@ Work-in-process features include:
    - Ability to search contacts and not only the left side conversation list.
    - Better algorithm to match the target string to the desire contact.
    - Test if its necessary to resolve or ignore emojis on conversations tittles.
+- Simulated typing. Instead of injecting the message, simulate user typing to mask the bot behaviour.
 - Prevent and/or recover from conversations poping in to the active conversation.
 - Use of whatsapp api instead of DOM manipulation.
 - [Done] ~~Make getQrCode() method also retrieve the Base64 string if the developer decides to do something else with it.~~
