@@ -17,12 +17,12 @@ Its not ready to be used has a npm dependency (yet) but you can download the cod
 ## Regarding the safety of your data
 As a responsable person you should not trust blindly anything you come accross online. This project is open source so anyone can audit its code and check that there is no outside connection or data dumps being made to any untrusted server. You can and **should check the code** which is using a Puppeeter instance which actions are confined to the WhatsApp Web app. You can also double check by running this package over a dummy WhatsApp account and spoofing all network calls being made. **They should match all the calls WhatsApp Web App uses in their page and not one more.**
 
-At no moment should you trust a project like this without auditing its code. A puppeetter instance is an actual browser with access to all the data on the WhatsApp account, the same data you would have access if you loggin right now in your local browser.
+At no moment should you trust a project like this without auditing its code. A puppeetter instance is an actual browser with access to all the data on the WhatsApp account, the same data you would have access if you login right now in your local browser.
 
-## **Do not ever read a QRCode which generation you do not know off, do not controll nor understand**
+## **Do not ever read a QRCode which generation you do not know off, do not control or do not understand**
 
-## Regarding the safety of other people data
-Also as responsable person and developer, the use of the code in this repository is your and only your responsability. The intend of this project is to automate some task that involve sending WhatsApp message automatically. In no case, the author is reponsable for your intentions, implementations or any damage that might outcome from the use of the code, including WhatsApp terminating your account for any violation of their TOS.
+## Regarding the safety of other people's data
+Also, as responsable person and developer, the use of the code in this repository is your and only your responsability. The intend of this project is to automate some task that involves sending WhatsApp messages automatically. In no case, the author is reponsable for your intentions, implementations or any damage that might outcome from the use of the code, including WhatsApp terminating your account for any violation of their TOS.
 
 ---
 ## Implemented Features
@@ -39,6 +39,7 @@ Work-in-process features include:
 - Improve how to identify a valid target.
    - Ability to search contacts and not only the left side conversation list.
    - Better algorithm to match the target string to the desire contact.
+   - Test if its necessary to resolve or ignore emojis on conversations tittles.
 - Prevent and/or recover from conversations poping in to the active conversation.
 - Use of whatsapp api instead of DOM manipulation.
 - [Done] ~~Make getQrCode() method also retrieve the Base64 string if the developer decides to do something else with it.~~
@@ -46,19 +47,19 @@ Work-in-process features include:
 ---
 ## The WhatsAppJS class
 
-The class provides a way to generate the login QRCode which is saved to a image file and/or launched on screen. Reading the QRCode within an WhatsApp phone app, logs that user into the active puppeeter instance.
+The class provides a way to generate the login QRCode which is saved to an image file and/or launched on screen. Reading the QRCode within an WhatsApp phone app, logs that user into the active puppeeter instance.
 After a valid login is detected, the WhatsAppJS class provides methods to send messages.
 
 #### WhatsAppJS.initiate(options)
 ```
 Kicks in the puppeeter instance.
 This is not included on the class constructor because it is resource intensive.
-With a initiate method, you can control when the class does the heavy lifting.
+With an initiate method, you can control when the class does the heavy lifting.
 ```
 #### WhatsAppJS.getQrCode({openFile})
 ```
 Get the QRCode for the user to log in into.
-The QRCode is saved to a image file.
+The QRCode is saved to an image file.
 You can also decide to show the QRCode on screen by
 setting `openFile` to true
 ```
