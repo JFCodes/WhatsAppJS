@@ -10,7 +10,7 @@ WhatsAppJS is a Javascript (Written in TypeScript) wrapper to send WhatsApp mess
 
 ### Installation
 
-Its not ready to be used has a npm dependency (yet) but you can download the code, copy the **src** and import the WhatsAppJS class module to work with it.
+Its not ready to be used has a npm dependency (yet) but you can download the code, copy the **src**, and import the WhatsAppJS class module to work with it. You also need to include puppeeter has a dependency in your project.
 
 ---
 # IMPORTANTE NOTICE
@@ -19,7 +19,7 @@ As a responsable person you should not trust blindly anything you come accross o
 
 At no moment should you trust a project like this without auditing its code. A puppeetter instance is an actual browser with access to all the data on the WhatsApp account, the same data you would have access if you loggin right now in your local browser.
 
-## **Do not ever read a QRCode which generation you do not know off, do not controll or not understand**
+## **Do not ever read a QRCode which generation you do not know off, do not controll nor understand**
 
 ## Regarding the safety of other people data
 Also as responsable person and developer, the use of the code in this repository is your and only your responsability. The intend of this project is to automate some task that involve sending WhatsApp message automatically. In no case, the author is reponsable for your intentions, implementations or any damage that might outcome from the use of the code, including WhatsApp terminating your account for any violation of their TOS.
