@@ -41,7 +41,7 @@ Working-in-process features include:
    - Better algorithm to match the target string to the desire contact.
 - Prevent and/or recover from conversations poping in to the active conversation.
 - Use of whatsapp api instead of DOM manipulation.
-- Make getQrCode() method also retrieve the Base64 string if the developer decides to do something else with it.
+- ~~Make getQrCode() method also retrieve the Base64 string if the developer decides to do something else with it.~~ [Done]
 
 ---
 ## The WhatsAppJS class
@@ -135,6 +135,8 @@ const run = async () => {
     await WAJS.initiate()
     // You can fetch the image file from ./src/temp/qrcode.png after .getQrCode is resolved
     await WAJS.getQrCode({ openImage: true })
+    // getQrCode() also returns the base74 string containing the QRCode if you want to use it for something else
+    // const QRCodeImageString = await WAJS.getQrCode()
 
     // After getting the QRCode the user must read it with their phone.
     // When a successful login is detected, the callback on onLogin, kicks in.

@@ -107,12 +107,13 @@ class WhatsAppJs {
             throw new Error('And error occured while trying to fetch the QRCode.')
         }
         // Save to temp folder converted to png
-        qrCodeString = qrCodeString.replace(/^data:image\/png;base64,/, "")
-        await WriteToFile({ fileName: this.tempFilePath, content: qrCodeString, enconding: 'base64' })
+        const cleanQrCodeString = qrCodeString.replace(/^data:image\/png;base64,/, "")
+        await WriteToFile({ fileName: this.tempFilePath, content: cleanQrCodeString, enconding: 'base64' })
         // If option openImage, use a command to launch it in the user predefined image program
         if (openImage) exec(path.resolve(__dirname, this.tempFilePath.replace('src/', '')))
         // Initiate login listener that triggers when it detects that the user scanned the qrCode
         this.loginListener()
+        return qrCodeString
     }
 
     /**

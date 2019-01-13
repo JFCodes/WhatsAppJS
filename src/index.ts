@@ -17,10 +17,7 @@ const run = async () => {
     // after a valid login since we have to wait for the user to read the QRCode.
     WAJS.onLogin(async () => {
         // Here, we are now login and able to send messages
-        await WAJS.sendMessage({ target: 'Bernardo', message: 'Hey, this was a bot!!!' })
-        await WAJS.sendMessage({ target: 'Bernardo', message: 'E esta tambem' })
-        await WAJS.sendMessage({ target: 'Bernardo', message: 'Isto e brutal!!! lol' })
-        await WAJS.sendMessage({ target: 'Bernardo', message: 'Estou a mandar mensagens por codigo automatico hehe' })
+        await WAJS.sendMessage({ target: 'John Doe', message: 'Hey, this was a bot!!!' })
 
         // You need to stop the class to kill puppeeter and end the process.
         // Otherwise, Node keeps running. Place it accordingly in your code.
@@ -42,7 +39,9 @@ const run = async () => {
     // Also takes a while. This navigates and grabs the QRCode.
     // You can fetch the image file from ./src/temp/qrcode.png after .getQrCode is resolved
     await WAJS.getQrCode({ openImage: true })
-
+    // getQrCode also returns the base74 string containing the QRCode if you want to use it
+    // const QRCodeImageString = await WAJS.getQrCode()
+    
     // After getting the QRCode the user must read it with their phone.
     // When a successful login is detected, the callback on onLogin, kicks in.
 }
