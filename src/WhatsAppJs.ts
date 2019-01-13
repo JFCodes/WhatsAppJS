@@ -3,7 +3,7 @@ import { WriteToFile } from './utils/FSPromises'
 import { exec } from 'child_process'
 import SendMessage, { MessageToSend } from './utils/SendMessage'
 import * as path from 'path'
-// Page function
+// Page functions
 import getQrCode from './utils/PageFunctions/getQRCode'
 import checkLoggedIn from './utils/PageFunctions/checkLoggedIn'
 
@@ -59,14 +59,18 @@ class WhatsAppJs {
 
     /**
      * Stop Whatsapp.
-     * Rever to constructor defaults.
+     * Revert to constructor defaults.
      * Flags listeners to stop and close puppeeter instance
+     * The user might pass keepCallbacks as true to perseve the callbacks set on onLogin/onMessage
      */
-    public async stop () {
+    public async stop (keepCallbacks?: boolean): Promise<void> {
         this.initiated = false
         this.loggedIn = false
-        this.onLoginFunction = null
-        this.onMessageReceivedFunction = null
+        // keepCallbacks must be explicitly set to true. By default we clear them 
+        if (keepCallbacks) {
+            this.onLoginFunction = null
+            this.onMessageReceivedFunction = null
+        }
         this.stopListeners = true
         await this.browser.close()
     }
@@ -77,7 +81,7 @@ class WhatsAppJs {
      * The user can automatically open the image in a image program with the option openImage set to true.
      * @param options 
      */
-    public async getQrCode ({ openImage = false }: { openImage: boolean} ) {
+    public async getQrCode ({ openImage = false }: { openImage: boolean} ): Promise<string> {
         const isLoggedInError = 'WhatsAppJS is already logged in. Cannot generate QRCode.'
         // Throw error if not initiated or already logged in. 
         if (!this.initiated) throw new Error('WhatsAppJS object is not initiated. Please call .initiate before getting the QRCode')
@@ -104,7 +108,7 @@ class WhatsAppJs {
         let qrCodeString = await getQrCode(this.browser.page)
         // Check if somehow the string is empty or undefined. Should not happen.
         if (qrCodeString === '' || qrCodeString === undefined) {
-            throw new Error('And error occured while trying to fetch the QRCode.')
+            throw new Error('An error occured while trying to fetch the QRCode.')
         }
         // Save to temp folder converted to png
         const cleanQrCodeString = qrCodeString.replace(/^data:image\/png;base64,/, "")
@@ -118,11 +122,13 @@ class WhatsAppJs {
 
     /**
      * Sends a message using a SendMessage object
+     * TODO: maybe make message return true on sucess to ease logic on the thread side?
      * @param message
      */
-    public async sendMessage (message: MessageToSend) {
+    public async sendMessage (message: MessageToSend): Promise<void> {
         if (!message.target) throw new Error('Undefined target to send message to.')
         if (!message.message) throw new Error('Undefined message to send.')
+        // Create new SendMesasge object and trigger .send()
         const newMessage = new SendMessage({ page: this.browser.page, ...message })
         await newMessage.send().catch((error) => { throw new Error('Failed to send message') })
     }
@@ -148,9 +154,12 @@ class WhatsAppJs {
      * If so, iniates messageListner and sets internally values to the new state.
      */
     private async loginListener (): Promise<void> {
+        // Listener stop gate to stop this listener
         if (this.stopListeners) return
         // Check login status
         this.loggedIn = await checkLoggedIn(this.browser.page).catch(() => {
+            // FIXME: if an error occurs this listerner will cease. SHould it tho?
+            // Maybe just a console.warn and return false to keep the listerner alive...
             throw new Error('Could not check for login')
         })
         // If not logged in, print message saying it will re-check in X seconds and return.
@@ -173,7 +182,7 @@ class WhatsAppJs {
         if (!this.onLoginFunction) {
             console.warn('WhatsAppJS: login detected but no onLogin callback is set.')
         } else {
-            // Just a save wait to make sure the login page loads properly
+            // Just a save wait to make sure the login page loads properly since the user might be triggering stuff right away
             await this.browser.waitFor(LOGIN_LOAD_TIME)
             this.onLoginFunction()
         }

@@ -24,7 +24,7 @@ export default async function pressSend (page: Page): Promise<boolean> {
             return segs(element).join('/');
         }
         // Find button and retrieve its XPath
-        const  button = document.querySelector(sendButtonSelector)
+        const button = document.querySelector(sendButtonSelector)
         return Promise.resolve(getXPathForElement(button))
     }, sendButtonSelector)
 

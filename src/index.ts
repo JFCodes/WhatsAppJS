@@ -16,7 +16,7 @@ const run = async () => {
     // The onLogin setter is the most important because it defines what to do
     // after a valid login since we have to wait for the user to read the QRCode.
     WAJS.onLogin(async () => {
-        // Here, we are now login and able to send messages
+        // Here, we are now loged and able to send messages
         await WAJS.sendMessage({ target: 'John Doe', message: 'Hey, this was a bot!!!' })
 
         // You need to stop the class to kill puppeeter and end the process.
@@ -33,13 +33,13 @@ const run = async () => {
     })
 
     // Wait for puppeteer to kick in.
-    // This is contained on a initiate methods so the user can control when to kick in
+    // This is contained on a initiate method so the user can control when to kick in
     // since launching puppeeter can take a while.
     await WAJS.initiate()
     // Also takes a while. This navigates and grabs the QRCode.
     // You can fetch the image file from ./src/temp/qrcode.png after .getQrCode is resolved
     await WAJS.getQrCode({ openImage: true })
-    // getQrCode also returns the base74 string containing the QRCode if you want to use it
+    // getQrCode also returns the base64 string containing the QRCode if you want to use it:
     // const QRCodeImageString = await WAJS.getQrCode()
     
     // After getting the QRCode the user must read it with their phone.

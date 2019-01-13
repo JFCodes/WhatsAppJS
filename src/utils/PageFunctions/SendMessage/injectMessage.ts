@@ -8,7 +8,7 @@ import { Selectors } from '../_constans'
  * that is behaving like the input element.
  * 1 - Set the innerText with the message plus a char
  * 2 - Click on the element
- * 3 - Trigger backspace to deleted added char
+ * 3 - Trigger backspace to delete the added char
  * After 3, the framework responds on the keypress and updates the value to be sent
  * according to the div innerText. Done.
  * @param page 
@@ -32,10 +32,10 @@ export default async function injectMessage (page: Page, message: string): Promi
             return segs(element).join('/');
         }
         // Find and inject message into div behaving like the text input
-        let textareaElement = document.querySelector(textareaSelector)
+        const textareaElement = document.querySelector(textareaSelector)
         if (textareaElement === null) return Promise.resolve(false)
         textareaElement.innerText = message + '_'
-        // Return the diov XPath
+        // Return the div XPath
         return Promise.resolve(getXPathForElement(textareaElement))
     }, textareaSelector, message)
 

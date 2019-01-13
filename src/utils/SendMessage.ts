@@ -38,9 +38,9 @@ class SendMessage {
 
     /**
      * Send a message.
-     * 1. Find and click the target converstion. Error if not found.
+     * 1. Find and click the target conversation. Error if not found.
      * 2. Inject the message into the text field. Error if text field not found.
-     * 3. Press button to send message.
+     * 3. Press button to send message. Error if button not found.
      * 4. TODO: confirm message was sent (appears on screen and has 1 or 2 check marks)
      */
     public async send (): Promise<void> {

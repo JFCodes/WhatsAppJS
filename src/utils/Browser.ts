@@ -8,7 +8,7 @@ interface BrowserOptions {
 /**
  * A Class to wrapp the puppeeter instance so we can abstract it on WhatsAppJS class.
  * Note that we don't wrap the page.evaluate and other page methods used in the utils/PageFunctions.
- * They case specific and very simple to be wortg abstracting them here. Those functions
+ * They are case specific and very simple to be worth abstracting them here. Those functions
  * receive the .page pointer and operate directly over it.
  * Two paths apply:
  * WhatsAppJS.page -> passes .page to a page function
