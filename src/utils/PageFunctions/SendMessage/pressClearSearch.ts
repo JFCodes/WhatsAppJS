@@ -1,0 +1,34 @@
+import { Page } from "puppeteer";
+import { Selectors } from '../_constans'
+import _getXPath from '../_getXPath'
+/**
+ * Presses the send button to send the injected message
+ * @param page 
+ */
+export default async function pressClearSearch (page: Page): Promise<boolean> {
+    const clearSearchSelector = Selectors.CONVERSATION_CLEAR_SEARCH
+
+    const targetXPath = await page.evaluate((clearSearchSelector) => {
+        const _getXPath = (element) => { 
+            const idx = (sib, name) => sib ? idx(sib.previousElementSibling, name || sib.localName) + (sib.localName == name) : 1;
+            const segs = elm => !elm || elm.nodeType !== 1 ? [''] : elm.id && document.querySelector(`#${elm.id}`) === elm ? [`id("${elm.id}")`] : [...segs(elm.parentNode), `${elm.localName.toLowerCase()}[${idx(elm, undefined)}]`];
+            return segs(element).join('/');
+        }
+        // Find button and retrieve its XPath
+        const button = document.querySelector(clearSearchSelector)
+        return Promise.resolve(_getXPath(button))
+    }, clearSearchSelector)
+
+    if (targetXPath === '') {
+        throw new Error('Could not find send button element')
+    }
+
+    // Find and click target element
+    const targetElement: any = await page.$x(targetXPath)
+    if (targetElement.length > 0) {
+        await targetElement[0].click()
+        return true
+    } else {
+        throw new Error('Found button element but xPath is invalid.')
+    }
+} 

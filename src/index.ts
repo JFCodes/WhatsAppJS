@@ -7,7 +7,7 @@ import WhatsAppJs from './WhatsAppJs'
 // You can set headless and devTools options.
 const WAJS = new WhatsAppJs({
     headless: false,
-    devTools: false
+    devTools: true
 })
 
 // Containning the code on a function so you can use async/await

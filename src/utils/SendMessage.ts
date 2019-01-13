@@ -1,8 +1,10 @@
 import * as puppeteer from 'puppeteer'
 // Message page functions
+import searchTarget from '../utils/PageFunctions/SendMessage/searchTarget'
 import clickConversarion from '../utils/PageFunctions/SendMessage/clickConversarion'
 import injectMessage from '../utils/PageFunctions/SendMessage/injectMessage'
 import pressSend from '../utils/PageFunctions/SendMessage/pressSend'
+import pressClearSearch from '../utils/PageFunctions/SendMessage/pressClearSearch'
 
 // A message must have a target and a message strings
 export interface MessageToSend {
@@ -44,7 +46,11 @@ class SendMessage {
      * 4. TODO: confirm message was sent (appears on screen and has 1 or 2 check marks)
      */
     public async send (): Promise<void> {
+        await searchTarget(this.page, this.target).catch((error) => { throw error })
+        await delay(PACE_TIMING)
         await clickConversarion(this.page, this.target).catch((error) => { throw error })
+        await delay(PACE_TIMING)
+        await pressClearSearch(this.page).catch((error) => { throw error })
         await delay(PACE_TIMING)
         await injectMessage(this.page, this.message).catch((error) => { throw error })
         await delay(PACE_TIMING)

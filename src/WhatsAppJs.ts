@@ -117,7 +117,6 @@ class WhatsAppJs {
         // If option openImage, use a command to launch it in the user predefined image program
         if (openImage) exec(path.resolve(__dirname, this.tempFilePath.replace('src/', '')))
         // Initiate login listener that triggers when it detects that the user scanned the qrCode
-        console.log('kick in login')
         this.loginListener()
         return qrCodeString
     }
@@ -133,7 +132,6 @@ class WhatsAppJs {
         // Create new SendMesasge object and trigger .send()
         const newMessage = new SendMessage({ page: this.browser.page, ...message })
         await newMessage.send().catch((error) => { 
-            console.log(error)
             throw new Error('Failed to send message')
         })
     }

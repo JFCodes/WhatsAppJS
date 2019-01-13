@@ -16,30 +16,42 @@ import _getXPath from '../_getXPath'
  */
 export default async function clickConversarion (page: Page, targetString: string): Promise<boolean> {
     const containerSelector = Selectors.CONVERSATIONS_PARENT_CLASS
+    const placeholderElementSelector = Selectors.CONVERSATION_PLACEHOLDER_ELEMENT
+    const messageResultSelector = Selectors.CONVERSATION_MESSAGE_RESULTS_ELEMENT
     const titleSelector = Selectors.CONVERSATION_TARGET_ELEMENT
 
-    const targetXPath = await page.evaluate((containerSelector, titleSelector, targetString) => {
+    const targetXPath = await page.evaluate((containerSelector, placeholderElementSelector, messageResultSelector, titleSelector, targetString) => {
         const _getXPath = (element) => { 
             const idx = (sib, name) => sib ? idx(sib.previousElementSibling, name || sib.localName) + (sib.localName == name) : 1;
             const segs = elm => !elm || elm.nodeType !== 1 ? [''] : elm.id && document.querySelector(`#${elm.id}`) === elm ? [`id("${elm.id}")`] : [...segs(elm.parentNode), `${elm.localName.toLowerCase()}[${idx(elm, undefined)}]`];
             return segs(element).join('/');
         }
+        const sanityze = (value) => {
+            // Remove spaces and lowerCase the string
+            return value.replace(/ /g, '').toLowerCase()
+        }
         let xPath = ''
+        targetString = sanityze(targetString)
         const  container = document.querySelector(containerSelector)
         for(let element of container.children) {
+            // This eliminates placeholders 'CHATS' and 'MESSAGES' elements
+            if(element.querySelector(placeholderElementSelector) !== null) continue
+            // This eliminates 'MESSAGES' search results
+            if(element.querySelector(messageResultSelector) !== null) continue
+            // We are left with results for chat elements
             const titleSpanElement = element.querySelector(titleSelector)
             if (!titleSpanElement) continue
-            const spanElement = titleSpanElement.querySelector('span')
-            if (spanElement.innerText === targetString) {
+            const checkAgaints = sanityze(titleSpanElement.innerText)
+            if (checkAgaints === targetString) {
                 // Remember our target element is the child of the conversarion container
                 // not the span element with the conversation target
                 xPath = _getXPath(element)
                 return Promise.resolve(xPath)
             }
         }
-        // Return XPath
+        // Return empty xPath since no element matched the target
         return Promise.resolve(xPath)
-    }, containerSelector, titleSelector, targetString)
+    }, containerSelector, placeholderElementSelector, messageResultSelector, titleSelector, targetString)
 
     // Error out if XPath is empty
     if (targetXPath === '') {
