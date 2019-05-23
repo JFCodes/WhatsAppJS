@@ -42,6 +42,7 @@ The first version of WhatsAppJS is capable of:
 Work-in-process features include:
 - Detect received messages, retrieving the sender and the message content to be worked upon.
 - Improve how to identify a valid target.
+   - Extend search results to also match groups.
    - [Done] ~~Ability to search contacts and not only the left side conversation list.~~
    - Better algorithm to match the target string to the desire contact.
    - Test if its necessary to resolve or ignore emojis on conversations tittles.
@@ -156,6 +157,6 @@ run()
 ---
 ### Contributions
 This project its still in its early stages.
-I have not defined a workable contribution model but you are free to open issues regarding request/imporvements.
+I have not defined a workable contribution model but you are free to open issues regarding request/improvements.
 Follow to receive updates for the road map features.
 
