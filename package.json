@@ -4,9 +4,7 @@
   "description": "A WhatsApp Web JavaScript Wrapper",
   "main": "index.js",
   "scripts": {
-    "dev": "node ./src/index.ts",
-    "start": "ts-node ./src/index.ts",
-    "prod": "npm run build && npm run start"
+    "execute": "ts-node src/index.ts"
   },
   "repository": {
     "type": "git",
@@ -24,11 +22,12 @@
   },
   "homepage": "https://github.com/JFCodes/WhatsAppJS#readme",
   "dependencies": {
-    "puppeteer": "^1.11.0"
+    "open": "^8.0.2",
+    "puppeteer": "^8.0.0"
   },
   "devDependencies": {
-    "@types/puppeteer": "^1.11.1",
-    "ts-node": "^7.0.1",
-    "typescript": "^3.2.2"
+    "@types/puppeteer": "^5.4.3",
+    "ts-node": "^9.1.1",
+    "typescript": "^4.2.3"
   }
 }
