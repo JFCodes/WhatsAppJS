@@ -17,6 +17,6 @@ export default {
             STANDARD: 1000,
             DOM_UPDATE: 150,
         },
-        TARGET_CHAT: 'CursedSheep'
+        TARGET_CHAT: 'Myself'
     }
 }
