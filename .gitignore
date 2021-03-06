@@ -32,3 +32,4 @@ src/APPS/*/config.ts
 src/APPS/*/config.json
 src/APPS/*/settings.ts
 src/APPS/*/settings.json
+src/bot/files/
