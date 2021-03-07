@@ -22,6 +22,7 @@
   },
   "homepage": "https://github.com/JFCodes/WhatsAppJS#readme",
   "dependencies": {
+    "axios": "^0.21.1",
     "open": "^8.0.2",
     "puppeteer": "^8.0.0"
   },

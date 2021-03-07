@@ -28,6 +28,7 @@ node_modules/
 # dotenv environment variables file
 .env
 
+src/files/
 src/APPS/*/config.ts
 src/APPS/*/config.json
 src/APPS/*/settings.ts

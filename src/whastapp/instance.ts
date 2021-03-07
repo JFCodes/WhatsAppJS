@@ -142,7 +142,7 @@ class Whatsapp {
         }
     }
 
-    private performCommand(commandString: string) {
+    private async performCommand(commandString: string) {
         if (!commandString) return
         // Command anatomy:
         // [app] [command?] [...args?]
@@ -151,13 +151,13 @@ class Whatsapp {
         //          command     -> list
         //          args        -> [all, coins]
         const commandPieces = commandString.split(' ')
-        const appId = commandPieces[0]
+        const appId = (commandPieces[0] || '').toLowerCase()
         if (!this.apps.installed[appId]) {
             ActionSendMessage({ page: this.bot.page, message: `Sorry, the app '${appId}' is not recognized` })
             return
         }
 
-        const command = commandPieces[1] || ''
+        const command = (commandPieces[1] || '').toLowerCase()
         let options
         if (commandPieces.length > 2) {
             commandPieces.shift()
@@ -168,9 +168,12 @@ class Whatsapp {
         }
 
         utilPrint(`New command detected:\napp         - '${appId}'\ncommand     - '${command}'\noptions     - ${JSON.stringify(options)}`)
-        this.apps.installed[appId].execute(command, options).then(output => {
-            ActionSendMessage({ page: this.bot.page, message: output })
-        })
+        const message = await this.apps.installed[appId]
+            .execute(command, options)
+            .then(output => output)
+            .catch((error: string) => error)
+
+        ActionSendMessage({ page: this.bot.page, message })
     }
 }
 
