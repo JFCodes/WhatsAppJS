@@ -3,6 +3,7 @@ import Bot from '../bot/instance'
 import CONFIG from '../config'
 import utilSleep from '../utils/sleep'
 import utilSaveImage from '../utils/saveImage'
+import utilPrint from '../utils/print'
 // Base Apps
 import App from '../APPS/_app'
 import AppCrypto from '../APPS/crypto/app'
@@ -35,21 +36,21 @@ class Whatsapp {
         this.login = { done: false, image: '' }
         this.apps = { installed: {} }
 
-        try {
+        if (fs.existsSync(LAST_INPUT_ID_PATH)) {
             this.lastInputId = fs.readFileSync(LAST_INPUT_ID_PATH, 'utf-8')
-        } catch (e) {
-            this.lastInputId = ''
         }
     }
 
-    get loginQrCode(): string {
+
+    /** CLASS API */
+    public get loginQrCode(): string {
         return this.login.image
     }
 
     public async initialize (): Promise<void> {
         if (this.initialized) return
 
-        this.installBaseApps()
+        await this.installBaseApps()
         await this.bot.initialize()
         await this.bot.goTo({ url: CONFIG.WAHTSAPP.ROOTURL })
         await this.checkLogin()
@@ -61,10 +62,15 @@ class Whatsapp {
             await utilSleep(CONFIG.WAHTSAPP.TIME_PAD.AFTER_SESSION_RECOVER)
             this.checkLogin()
         }
+
+        utilPrint(`Whatsapp-js instance initialized.`)
     }
 
-    public installApp (app: App) {
+    public async installApp (app: App) {
+        if (this.apps.installed[app.id]) return
         this.apps.installed[app.id] = app
+        await app.install()
+        utilPrint(`Installed '${app.id}'.`)
     }
 
     public async waitLogin(): Promise<void> {
@@ -75,15 +81,30 @@ class Whatsapp {
 
         await utilSleep(CONFIG.WAHTSAPP.TIME_PAD.STANDARD)
         await this.bot.saveSession()
-        await ActionFocusChat({ page: this.bot.page })
+
+        const messagedFocus = await ActionFocusChat({ page: this.bot.page })
+            .then(() => true)
+            .catch(() => false)
+        if (!messagedFocus) throw new Error('could not resovle target chat')
+        utilPrint('Focus chat selected.')
+
         await ActionSendMessage({ page: this.bot.page, message: 'Hi! I am online.' })
 
         this.listen()
+        utilPrint(`Login detected. Ready for use.`)
         return
     }
 
-    private installBaseApps(): void {
-        this.apps.installed[AppCrypto.id] = AppCrypto
+    public showQrCode(): void {
+        try {
+            open(QR_CODE_FILE_PATH)
+        } catch(e) { /* we don't care */ }
+    }
+
+
+    /** INTERNALS */
+    private async installBaseApps(): Promise<void> {
+        await this.installApp(AppCrypto)
     }
 
     private async checkLogin () {
@@ -102,18 +123,11 @@ class Whatsapp {
         return
     }
 
-    public showQrCode(): void {
-        try {
-            open(QR_CODE_FILE_PATH)
-        } catch(e) { /* we don't care */ }
-    }
-
-    public async listen() {
+    private async listen() {
         this.active = true
         while (this.active) {
             // Capture the last id
             const lastInputId = await EvaluatorLastInput({ page: this.bot.page })
-            console.log({ lastInputId })
 
             if (this.lastInputId !== lastInputId) {
                 this.lastInputId = lastInputId
@@ -129,6 +143,7 @@ class Whatsapp {
     }
 
     private performCommand(commandString: string) {
+        if (!commandString) return
         // Command anatomy:
         // [app] [command?] [...args?]
         // Ex: crypto list all coins
@@ -136,9 +151,9 @@ class Whatsapp {
         //          command     -> list
         //          args        -> [all, coins]
         const commandPieces = commandString.split(' ')
-        const app = commandPieces[0]
-        if (!this.apps.installed[app]) {
-            ActionSendMessage({ page: this.bot.page, message: `Sorry, the app '${app}' is not recognized` })
+        const appId = commandPieces[0]
+        if (!this.apps.installed[appId]) {
+            ActionSendMessage({ page: this.bot.page, message: `Sorry, the app '${appId}' is not recognized` })
             return
         }
 
@@ -152,7 +167,8 @@ class Whatsapp {
             options = []
         }
 
-        this.apps.installed[app].execute(command, options).then(output => {
+        utilPrint(`New command detected:\napp         - '${appId}'\ncommand     - '${command}'\noptions     - ${JSON.stringify(options)}`)
+        this.apps.installed[appId].execute(command, options).then(output => {
             ActionSendMessage({ page: this.bot.page, message: output })
         })
     }

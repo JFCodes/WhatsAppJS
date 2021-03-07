@@ -9,6 +9,7 @@ abstract class App {
         this.id = options.id
     }
 
+    abstract install(): Promise<void>
     abstract execute(command: string, options: Array<string>): Promise<string>
 }
 

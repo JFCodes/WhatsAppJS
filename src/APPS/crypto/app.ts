@@ -7,6 +7,10 @@ class App_Crypto extends App {
         })
     }
 
+    async install() {
+        console.log('crypto app installation')
+    }
+    
     async execute (command, options) {
         console.log({ command, options })
         return 'executing command on crypto app'
